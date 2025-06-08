@@ -4,6 +4,11 @@
 
 ---
 
+## 📸 Screenshot
+
+![Dashboard Preview](./public/Screenshot%202025-06-08%20232308.png)
+
+
 ## ✨ Features
 
 ### 🔐 User Authentication
@@ -44,14 +49,14 @@
 ## 🛠️ Tech Stack
 
 ### ⚙️ Frontend
-- **React** (with TypeScript)
+- **React** 
 - **Tailwind CSS** – for responsive and modern UI
 - **Lucide Icons** – for elegant iconography
 - **Recharts** – for visualizing financial data
 - **Context API** – to manage global app state
 
 ### ⚙️ Backend
-- **Node.js + Express** – for RESTful APIs
+- **Node.js + Express** 
 - **PostgreSQL** – as the relational database
 - **pg** – PostgreSQL client for Node.js
 - **JWT** – JSON Web Token for authentication
