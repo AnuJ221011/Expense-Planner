@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import Index from './pages';
@@ -8,7 +7,6 @@ import NotFound from './pages/NotFound';
 import AddSavings from './components/addSavings';
 
 export default function App() {
-  const [user, setUser] = useState(null);
 
   return (
     <Router>

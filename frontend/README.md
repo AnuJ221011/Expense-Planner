@@ -49,7 +49,7 @@
 ## 🛠️ Tech Stack
 
 ### ⚙️ Frontend
-- **React** 
+- **React + Vite** 
 - **Tailwind CSS** – for responsive and modern UI
 - **Lucide Icons** – for elegant iconography
 - **Recharts** – for visualizing financial data
