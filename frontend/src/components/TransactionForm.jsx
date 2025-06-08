@@ -209,7 +209,6 @@ const TransactionForm = ({ type = 'income', onClose = () => {}, onSubmit = () =>
                 onValueChange={(value) => setFormData({ ...formData, category: value })}
               >
                 <SelectTrigger className="relative">
-                  <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/40" />
                   <div className="pl-10">
                     <SelectValue placeholder="Select category" />
                   </div>
@@ -219,7 +218,7 @@ const TransactionForm = ({ type = 'income', onClose = () => {}, onSubmit = () =>
                     <SelectItem 
                       key={category} 
                       value={category}
-                      onClick={() => setFormData({ ...formData, category })}
+                      // onClick={() => setFormData({ ...formData, category })}
                     >
                       {category}
                     </SelectItem>
