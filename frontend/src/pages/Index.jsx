@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Button } from '../components/ui/button';
-import { Dialog, DialogTrigger } from '../components/ui/dialog';
 import { 
   Wallet, 
   TrendingUp, 
@@ -11,7 +10,6 @@ import {
   Star,
   ArrowRight,
   CheckCircle,
-  Sparkles,
   Users,
   Clock,
   Award,
@@ -246,8 +244,7 @@ const Index = () => {
               Budgify helps you control spending, track income, and manage savings with an intuitive financial dashboard.
             </p>
             
-            <Dialog>
-              <DialogTrigger asChild>
+              <div>
                 <Button 
                   size="lg" 
                   className="text-lg px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 animate-glow group"
@@ -256,8 +253,7 @@ const Index = () => {
                   Get Started
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
-              </DialogTrigger>
-            </Dialog>
+              </div>
           </div>
         </div>
       </section>

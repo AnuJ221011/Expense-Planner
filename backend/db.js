@@ -54,9 +54,9 @@ const initDB = async () => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
-    `;
+    `;   
     await pool.query(createExpensesTableQuery);
-    console.log('Expenses table is ready');
+    console.log('Expenses table is ready'); 
 
     // Create Savings Goals table
     const createSavingsGoalsTableQuery = `

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, DollarSign, Calendar, Clock, User, Tag, Target } from 'lucide-react';
-import AddSavings from './addSavings';
 import { Select, SelectTrigger, SelectItem, SelectValue, SelectContent } from './ui/select';
 import { Button } from './ui/button';
 import { Card, CardHeader, CardContent, CardTitle } from './ui/card';
