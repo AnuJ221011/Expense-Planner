@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -9,7 +9,6 @@ const SignInModal = ({
   onOpenChange,
   onLogin,
   onSwitchToSignUp,
-  trigger,
 }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -60,16 +59,9 @@ const SignInModal = ({
     onSwitchToSignUp();
   };
 
-  if (!isOpen) return trigger || null;
 
   return (
     <>
-    {!isOpen && trigger ? (
-      <div onClick={() => onOpenChange(true)} className="inline-block">
-        {trigger}
-      </div>
-    ) : null}
-
     {isOpen && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
         <div className="relative w-full max-w-md mx-auto bg-slate-900 border-2 border-cyan-500/30 rounded-2xl shadow-2xl overflow-hidden">

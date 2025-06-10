@@ -430,6 +430,7 @@ const Index = () => {
         isOpen={isSignUpOpen}
         onOpenChange={setIsSignUpOpen}
         onSignUp={handleSignUp}
+        
       />
     </div>
   );

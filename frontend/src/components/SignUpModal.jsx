@@ -9,7 +9,6 @@ const SignUpModal = ({
   onOpenChange,
   onSignUp,
   onSwitchToSignIn,
-  trigger,
 }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -52,12 +51,6 @@ const SignUpModal = ({
 
   return (
     <>
-      {trigger && (
-        <div onClick={() => onOpenChange(true)} className="inline-block ">
-          {trigger}
-        </div>
-      )}
-
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="relative w-full max-w-md mx-auto bg-slate-900 border-2 border-cyan-500/30 rounded-2xl shadow-2xl p-0 overflow-hidden">
