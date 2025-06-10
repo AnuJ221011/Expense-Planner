@@ -16,14 +16,6 @@ const SignInModal = ({
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === 'Escape') onOpenChange(false);
-    };
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [onOpenChange]);
-
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);

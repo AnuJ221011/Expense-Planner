@@ -58,7 +58,6 @@ router.post('/signin', async (req, res) => {
 });
 
 // Route to get user profile information
-// This route retrieves the user's profile information using the authenticated token
 router.get('/profile', authenticateToken, async (req, res) => {
   try {
     const result = await pool.query('SELECT id, name, email FROM "User" WHERE id = $1', [

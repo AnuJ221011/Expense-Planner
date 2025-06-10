@@ -5,7 +5,7 @@ const Select = ({ children, value, onValueChange }) => {
 
   const handleItemClick = (val) => {
     onValueChange(val);
-    setIsOpen(false); // ✅ Close dropdown on selection
+    setIsOpen(false); 
   };
 
   return (

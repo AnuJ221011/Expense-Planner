@@ -156,7 +156,7 @@ const SignUpModal = ({
                 </div>
               </form>
 
-              {/* Close button (optional) */}
+              {/* Close button */}
               <button
                 onClick={() => onOpenChange(false)}
                 className="absolute top-2 right-3 text-white text-lg hover:text-red-400"

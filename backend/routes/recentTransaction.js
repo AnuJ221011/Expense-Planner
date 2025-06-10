@@ -108,7 +108,7 @@ router.get('/transactions/:userId/summary', async (req, res) => {
         total: totalBalance,
         income: totalIncome,
         expenses: totalExpenses,
-        savings: 0 // You can add savings logic later if needed
+        savings: 0 
       }
     });
 

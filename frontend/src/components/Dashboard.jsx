@@ -73,7 +73,6 @@ const Dashboard = () => {
     }
   };
 
-  // Keep this for backward compatibility, but the BalanceCard will now fetch dynamic data
   const balance = {
     total: 66000,
     income: 244000,
