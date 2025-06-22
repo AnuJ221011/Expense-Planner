@@ -1,4 +1,5 @@
 const express = require('express');
+// add auth
 const router = express.Router();
 const {pool} = require('../db'); // PostgreSQL pool connection
 

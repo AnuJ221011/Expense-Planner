@@ -66,6 +66,10 @@ const Index = () => {
     setIsSignUpOpen(true);
   };
 
+  const handleSwitchToSignIn = () => {
+    setIsLoginOpen(true);
+  };
+
   if (isLoggedIn) {
     return <Dashboard />;
   }
@@ -430,7 +434,7 @@ const Index = () => {
         isOpen={isSignUpOpen}
         onOpenChange={setIsSignUpOpen}
         onSignUp={handleSignUp}
-        
+        onSwitchToSignIn={handleSwitchToSignIn}
       />
     </div>
   );

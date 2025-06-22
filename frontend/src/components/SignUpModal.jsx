@@ -47,6 +47,7 @@ const SignUpModal = ({
   const handleSwitchToSignIn = () => {
     onOpenChange(false);
     onSwitchToSignIn();
+    
   };
 
   return (

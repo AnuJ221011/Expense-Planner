@@ -5,7 +5,6 @@ const { getBalanceData, getMonthlyIncomeTransactions } = require('../controllers
 
 const authenticateUser = (req, res, next) => {
   // Add your authentication logic here
-  // For now, assuming user info is available in req.user
   next();
 };
 

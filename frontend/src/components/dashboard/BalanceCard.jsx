@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Eye,
   EyeOff,
@@ -131,7 +131,7 @@ const BalanceCard = ({ userId, showBalance, onToggleBalance }) => {
   }
 
   return (
-    <Card className="backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 shadow-2xl rounded-2xl overflow-hidden transform hover:scale-[1.02] transition-all duration-300">
+    <Card className="backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 shadow-2xl rounded-2xl overflow-hidden transform transition-all duration-300">
       {/* Header with Gradient Background */}
       <CardHeader className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-b border-white/10 pb-6">
         <CardTitle className="flex items-center justify-between">

@@ -2,8 +2,8 @@ import{ useState, useEffect } from 'react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
-import { ArrowLeft, TrendingUp, ShoppingCart, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { ArrowLeft, TrendingUp, ShoppingCart, ChevronLeft, ChevronRight, Loader2, PieChart, BarChart2, BarChart2Icon, BarChart4 } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, ComposedChart, Legend } from 'recharts';
 import { useNavigate } from 'react-router-dom';
 
 // JWT token utility functions
@@ -112,6 +112,7 @@ const Analytics = () => {
     }
   });
   const [monthlyDateData, setMonthlyDateData] = useState([]);
+  const [incomeVsExpenseData, setIncomeVsExpenseData] = useState([]);
 
   const navigate = useNavigate();
 
@@ -128,13 +129,12 @@ const Analytics = () => {
     
     if (!token) {
       setAuthError('Authentication required. Please log in.');
-      navigate('/'); // Redirect to home page
+      navigate('/');
       return;
     }
 
     if (isTokenExpired(token)) {
       setAuthError('Session expired. Please log in again.');
-      removeTokenFromStorage();
       navigate('/');
       return;
     }
@@ -169,12 +169,11 @@ const Analytics = () => {
 
   // Format monthly date data
   const formatMonthlyDateData = (data) => {
-    console.log('Raw monthly date data:', data); // Debug log
+    console.log('Raw monthly date data:', data);
     const monthData = [];
     for (let i = 1; i <= daysInMonth; i++) {
       const dateStr = `${currentYear}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
       const found = data.find(item => {
-        // Handle different date formats that might come from the backend
         const itemDate = item.transaction_date;
         if (itemDate instanceof Date) {
           return itemDate.toISOString().split('T')[0] === dateStr;
@@ -186,9 +185,46 @@ const Analytics = () => {
         amount: found ? parseFloat(found.total_amount) : 0
       });
     }
-    console.log('Formatted monthly data:', monthData); // Debug log
+    console.log('Formatted monthly data:', monthData);
     return monthData;
   };
+
+  // Format income vs expense comparison data
+  const formatIncomeVsExpenseData = (incomeData, expenseData) => {
+    const combinedData = [];
+    for (let i = 1; i <= daysInMonth; i++) {
+      const dateStr = `${currentYear}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+      
+      const incomeFound = incomeData.find(item => {
+        const itemDate = item.transaction_date;
+        if (itemDate instanceof Date) {
+          return itemDate.toISOString().split('T')[0] === dateStr;
+        }
+        return itemDate === dateStr || itemDate?.split('T')[0] === dateStr;
+      });
+      
+      const expenseFound = expenseData.find(item => {
+        const itemDate = item.transaction_date;
+        if (itemDate instanceof Date) {
+          return itemDate.toISOString().split('T')[0] === dateStr;
+        }
+        return itemDate === dateStr || itemDate?.split('T')[0] === dateStr;
+      });
+
+      const incomeAmount = incomeFound ? parseFloat(incomeFound.total_amount) : 0;
+      const expenseAmount = expenseFound ? parseFloat(expenseFound.total_amount) : 0;
+      
+      combinedData.push({
+        date: i.toString(),
+        income: incomeAmount,
+        expense: expenseAmount,
+        netSavings: incomeAmount - expenseAmount
+      });
+    }
+    return combinedData;
+  };
+
+
 
   // Load analytics data
   const loadAnalyticsData = async () => {
@@ -244,7 +280,6 @@ const Analytics = () => {
         setAuthError('Authentication failed. Please log in again.');
         navigate('/');
       }
-      // You might want to show a toast notification here
     } finally {
       setLoading(false);
     }
@@ -255,19 +290,39 @@ const Analytics = () => {
     if (!userId) return;
     
     try {
-      let data;
-      if (activeType === 'income') {
-        data = await api.getIncomeByDateThisMonth(userId);
+      if (activeType === 'incomeVsExpense') {
+        // Load both income and expense data for comparison
+        const [incomeData, expenseData] = await Promise.all([
+          api.getIncomeByDateThisMonth(userId),
+          api.getExpensesByDateThisMonth(userId)
+        ]);
+        
+        console.log('Income data received:', incomeData);
+        console.log('Expense data received:', expenseData);
+        
+        const combinedData = formatIncomeVsExpenseData(incomeData, expenseData);
+        setIncomeVsExpenseData(combinedData);
+        
+        // Check if we have any non-zero values
+        const hasData = combinedData.some(item => item.income > 0 || item.expense > 0);
+        console.log('Has comparison data for chart:', hasData);
+        
       } else {
-        data = await api.getExpensesByDateThisMonth(userId);
+        // Load single type data (income or expense)
+        let data;
+        if (activeType === 'income') {
+          data = await api.getIncomeByDateThisMonth(userId);
+        } else {
+          data = await api.getExpensesByDateThisMonth(userId);
+        }
+        console.log(`${activeType} monthly data received:`, data);
+        const formattedData = formatMonthlyDateData(data);
+        setMonthlyDateData(formattedData);
+        
+        // Check if we have any non-zero values
+        const hasData = formattedData.some(item => item.amount > 0);
+        console.log('Has data for chart:', hasData);
       }
-      console.log(`${activeType} monthly data received:`, data); // Debug log
-      const formattedData = formatMonthlyDateData(data);
-      setMonthlyDateData(formattedData);
-      
-      // Check if we have any non-zero values
-      const hasData = formattedData.some(item => item.amount > 0);
-      console.log('Has data for chart:', hasData); // Debug log
       
     } catch (error) {
       console.error('Error loading monthly date data:', error);
@@ -325,6 +380,7 @@ const Analytics = () => {
     switch (activeType) {
       case 'income': return '#10B981';
       case 'expense': return '#3B82F6';
+      case 'incomeVsExpense': return '#10B981';
       default: return '#3B82F6';
     }
   };
@@ -333,11 +389,12 @@ const Analytics = () => {
     switch (activeType) {
       case 'income': return <TrendingUp className="h-5 w-5" />;
       case 'expense': return <ShoppingCart className="h-5 w-5" />;
+      case 'incomeVsExpense': return <PieChart className="h-5 w-5" />;
       default: return <TrendingUp className="h-5 w-5" />;
     }
   };
 
-  const formatCurrency = (value) => `₹${value.toLocaleString()}`;
+  const formatCurrency = (value) => `$${value.toLocaleString()}`;
 
   const periods = [
     { key: 'today', label: `Today (${todayDate} ${today.toLocaleString('default', { month: 'long' })})` },
@@ -345,6 +402,8 @@ const Analytics = () => {
     { key: 'thisMonth', label: `${today.toLocaleString('default', { month: 'long' })} ${today.getFullYear()}` },
     { key: 'thisYear', label: `Year ${today.getFullYear()}` }
   ];
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 p-4">
@@ -384,7 +443,8 @@ const Analytics = () => {
       <div className="flex flex-wrap gap-2 mb-6">
         {[
           { type: 'income', label: 'Income', color: 'from-green-500 to-green-400' },
-          { type: 'expense', label: 'Expense', color: 'from-blue-500 to-blue-400' }
+          { type: 'expense', label: 'Expense', color: 'from-blue-500 to-blue-400' },
+          { type: 'incomeVsExpense', label: 'Income vs Expense', color: 'from-slate-600 to-slate-400' },
         ].map(({ type, label, color }) => (
           <Button
             key={type}
@@ -398,60 +458,63 @@ const Analytics = () => {
           >
             {type === 'income' && <TrendingUp className="h-4 w-4" />}
             {type === 'expense' && <ShoppingCart className="h-4 w-4" />}
+            {type === 'incomeVsExpense' && <BarChart4 className="h-4 w-4" />}
             <span>{label}</span>
           </Button>
         ))}
       </div>
 
       {/* Charts Grid - 2x2 layout for first 4 charts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
-        {periods.map(({ key, label }) => (
-          <Card key={key} className="bg-white/5 backdrop-blur-sm border-white/10 transition-all duration-300 hover:bg-white/10">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-white flex items-center space-x-2 text-sm md:text-base">
-                {getTypeIcon()}
-                <span className="capitalize">{activeType} - {label}</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {analyticsData[activeType][key]?.length > 0 ? (
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart data={analyticsData[activeType][key]} margin={{ top: 10, right: 10, left: 10, bottom: 40 }}>
-                    <XAxis 
-                      dataKey="category" 
-                      tick={{ fill: '#9CA3AF', fontSize: 10 }}
-                      angle={-45}
-                      textAnchor="end"
-                      height={60}
-                      interval={0}
-                    />
-                    <YAxis tick={{ fill: '#9CA3AF', fontSize: 10 }} />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: '#1e293b', 
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '8px',
-                        color: '#ffffff',
-                        fontSize: '12px'
-                      }}
-                      formatter={(value) => [formatCurrency(value), 'Amount']}
-                    />
-                    <Bar 
-                      dataKey="amount" 
-                      fill={getTypeColor()}
-                      radius={[2, 2, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="h-[250px] flex items-center justify-center text-gray-400">
-                  No data available for this period
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {activeType !== 'incomeVsExpense' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
+          {periods.map(({ key, label }) => (
+            <Card key={key} className="bg-white/5 backdrop-blur-sm border-white/10 transition-all duration-300 hover:bg-white/10">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-white flex items-center space-x-2 text-sm md:text-base">
+                  {getTypeIcon()}
+                  <span className="capitalize">{activeType} - {label}</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {analyticsData[activeType][key]?.length > 0 ? (
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart data={analyticsData[activeType][key]} margin={{ top: 10, right: 10, left: 10, bottom: 40 }}>
+                      <XAxis 
+                        dataKey="category" 
+                        tick={{ fill: '#9CA3AF', fontSize: 10 }}
+                        angle={-45}
+                        textAnchor="end"
+                        height={60}
+                        interval={0}
+                      />
+                      <YAxis tick={{ fill: '#9CA3AF', fontSize: 10 }} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#1e293b', 
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '8px',
+                          color: '#ffffff',
+                          fontSize: '12px'
+                        }}
+                        formatter={(value) => [formatCurrency(value), 'Amount']}
+                      />
+                      <Bar 
+                        dataKey="amount" 
+                        fill={getTypeColor()}
+                        radius={[2, 2, 0, 0]}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-[250px] flex items-center justify-center text-gray-400">
+                    No data available for this period
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
       {/* 5th Chart - Monthly Date-wise Tracking with Navigation */}
       <Card className="bg-white/5 backdrop-blur-sm border-white/10 transition-all duration-300 hover:bg-white/10">
@@ -459,7 +522,9 @@ const Analytics = () => {
           <div className="flex items-center justify-between">
             <CardTitle className="text-white flex items-center space-x-2 text-sm md:text-base">
               {getTypeIcon()}
-              <span className="capitalize">{activeType} Daily Tracking</span>
+              <span className="capitalize">
+                {activeType === 'incomeVsExpense' ? 'Income vs Expense' : activeType} Daily Tracking
+              </span>
             </CardTitle>
             <div className="flex items-center space-x-2 md:space-x-4">
               <Button
@@ -485,49 +550,123 @@ const Analytics = () => {
           </div>
         </CardHeader>
         <CardContent>
-          {monthlyDateData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={monthlyDateData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
-                <XAxis 
-                  dataKey="date" 
-                  tick={{ fill: '#9CA3AF', fontSize: 10 }}
-                  label={{ value: 'Date', position: 'insideBottom', offset: -10, style: { textAnchor: 'middle', fill: '#9CA3AF', fontSize: '12px' } }}
-                  interval={Math.floor(daysInMonth / 10)}
-                />
-                <YAxis 
-                  tick={{ fill: '#9CA3AF', fontSize: 10 }}
-                  label={{ value: 'Amount (₹)', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#9CA3AF', fontSize: '12px' } }}
-                />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1e293b', 
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '8px',
-                    color: '#ffffff',
-                    fontSize: '12px'
-                  }}
-                  formatter={(value) => [formatCurrency(value), 'Daily Total']}
-                  labelFormatter={(label) => `Date: ${label} ${currentMonth}`}
-                /> 
-                <Line 
-                  type="monotone" 
-                  dataKey="amount" 
-                  stroke={getTypeColor()}
-                  strokeWidth={2}
-                  dot={{ fill: getTypeColor(), strokeWidth: 2, r: 3 }}
-                  activeDot={{ r: 5, stroke: getTypeColor(), strokeWidth: 2 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="h-[300px] flex items-center justify-center text-gray-400">
-              No daily data available for {currentMonth} {currentYear}
-            </div>
+          {activeType === 'incomeVsExpense' ? (
+              incomeVsExpenseData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={300}>
+                  <ComposedChart
+                    data={incomeVsExpenseData}
+                    margin={{ top: 10, right: 10, left: 10, bottom: 20 }}
+                  >
+                    <XAxis
+                      dataKey="date"
+                      tick={{ fill: '#9CA3AF', fontSize: 10 }}
+                      label={{
+                        value: 'Date',
+                        position: 'insideBottom',
+                        offset: -10,
+                        style: {
+                          textAnchor: 'middle',
+                          fill: '#9CA3AF',
+                          fontSize: '12px',
+                        },
+                      }}
+                      interval={Math.floor(daysInMonth / 10)}
+                    />
+                    <YAxis
+                      tick={{ fill: '#9CA3AF', fontSize: 10 }}
+                      label={{
+                        value: 'Amount ($)',
+                        angle: -90,
+                        position: 'insideLeft',
+                        style: {
+                          textAnchor: 'middle',
+                          fill: '#9CA3AF',
+                          fontSize: '12px',
+                        },
+                      }}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#1e293b',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '8px',
+                        color: '#ffffff',
+                        fontSize: '12px',
+                      }}
+                      formatter={(value, name) => [
+                        formatCurrency(value),
+                        name === 'income' ? 'Income' : 'Expense',
+                      ]}
+                      labelFormatter={(label) => `Date: ${label} ${currentMonth}`}
+                    />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="income"
+                      stroke="#10B981"
+                      strokeWidth={2}
+                      dot={{ fill: '#10B981', strokeWidth: 2, r: 3 }}
+                      name="Income"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="expense"
+                      stroke="#EF4444"
+                      strokeWidth={2}
+                      dot={{ fill: '#EF4444', strokeWidth: 2, r: 3 }}
+                      name="Expense"
+                    />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-[300px] flex items-center justify-center text-gray-400">
+                  No comparison data available for {currentMonth} {currentYear}
+                </div>
+              )
+            ): (
+            monthlyDateData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={monthlyDateData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
+                  <XAxis 
+                    dataKey="date" 
+                    tick={{ fill: '#9CA3AF', fontSize: 10 }}
+                    label={{ value: 'Date', position: 'insideBottom', offset: -10, style: { textAnchor: 'middle', fill: '#9CA3AF', fontSize: '12px' } }}
+                    interval={Math.floor(daysInMonth / 10)}
+                  />
+                  <YAxis 
+                    tick={{ fill: '#9CA3AF', fontSize: 10 }}
+                    label={{ value: 'Amount ($)', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#9CA3AF', fontSize: '12px' } }}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1e293b', 
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '8px',
+                      color: '#ffffff',
+                      fontSize: '12px'
+                    }}
+                    formatter={(value) => formatCurrency(value)}
+                    labelFormatter={(label) => `Date: ${label} ${currentMonth}`}
+                  />  
+                 <Line 
+                    type="monotone" 
+                    dataKey="amount" 
+                    stroke={getTypeColor()}
+                    strokeWidth={2}
+                    dot={{ fill: getTypeColor(), strokeWidth: 2, r: 3 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-[300px] flex items-center justify-center text-gray-400">
+                No data available for {currentMonth} {currentYear}
+              </div>
+            )
           )}
         </CardContent>
       </Card>
     </div>
-  );
-};
+  )
+}
 
-export default Analytics;
+export default Analytics

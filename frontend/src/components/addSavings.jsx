@@ -526,7 +526,6 @@ const AddSavings = () => {
                   <Target className="w-10 h-10 text-blue-400" />
                 </div>
                 <div className="absolute -top-1 -right-6 animate-bounce">
-                  <Sparkles className="w-5 h-5 text-yellow-400" />
                 </div>
               </div>
               <h3 className="text-xl font-bold text-white mb-3">Start Your Savings Journey</h3>
