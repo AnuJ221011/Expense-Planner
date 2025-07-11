@@ -40,7 +40,7 @@ const BalanceCard = ({ userId, showBalance, onToggleBalance }) => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`http://localhost:5000/api/balance/${userId}`, {
+      const response = await fetch(`http://localhost:3000/api/balance/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

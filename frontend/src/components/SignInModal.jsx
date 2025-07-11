@@ -20,7 +20,7 @@ const SignInModal = ({
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/routes/auth/signin', {
+      const res = await fetch('http://localhost:3000/api/routes/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

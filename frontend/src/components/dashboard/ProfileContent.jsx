@@ -12,7 +12,7 @@ const ProfileContent = ({ onGoToDashboard }) => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/routes/auth/profile', {
+        const res = await axios.get('http://localhost:3000/api/auth/profile', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

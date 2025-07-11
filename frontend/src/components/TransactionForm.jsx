@@ -51,7 +51,7 @@ const TransactionForm = ({ type = 'income', onClose = () => {}, onSubmit = () =>
         : { ...formData, type, user_id: userId };
 
     try {
-      const endpoint = type === 'income' ? 'http://localhost:5000/api/income' : 'http://localhost:5000/api/expense';
+      const endpoint = type === 'income' ? 'http://localhost:3000/api/income' : 'http://localhost:3000/api/expense';
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

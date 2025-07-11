@@ -17,7 +17,25 @@ initDB()
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:5173',               // local Vite dev
+  'https://expense-planner-ten.vercel.app/' //Vercel
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true 
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use('/api/routes/auth', authRoutes);
 app.use('/api/balance', balanceRoutes);
@@ -27,7 +45,7 @@ app.use('/api', recentTransactionRoutes);
 app.use('/api', analyticsRoutes);
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
