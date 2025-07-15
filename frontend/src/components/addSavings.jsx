@@ -47,7 +47,7 @@ const AddSavings = () => {
   // Fetch savings goals
   const fetchGoals = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/savings/goals/${userId}`);
+      const response = await fetch(`https://expense-planner-ynxs.vercel.app/api/savings/goals/${userId}`);
       if (response.ok) {
         const data = await response.json();
         setGoals(data);
@@ -69,7 +69,7 @@ const AddSavings = () => {
     setLoading(true);
     
     try {
-      const response = await fetch('http://localhost:3000/api/savings/goals', {
+      const response = await fetch('https://expense-planner-ynxs.vercel.app/api/savings/goals', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -99,7 +99,7 @@ const AddSavings = () => {
     setLoading(true);
     
     try {
-      const response = await fetch('http://localhost:3000/api/savings/transactions', {
+      const response = await fetch('https://expense-planner-ynxs.vercel.app/api/savings/transactions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -129,7 +129,7 @@ const AddSavings = () => {
     setDeleteLoading(true);
     
     try {
-      const response = await fetch(`http://localhost:3000/api/savings/goals/${goalToDelete.id}`, {
+      const response = await fetch(`https://expense-planner-ynxs.vercel.app/api/savings/goals/${goalToDelete.id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       });

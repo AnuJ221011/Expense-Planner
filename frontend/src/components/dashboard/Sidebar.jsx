@@ -15,7 +15,7 @@ const Sidebar = ({
     const fetchUserProfile = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:3000/api/routes/auth/profile', {
+        const res = await axios.get('https://expense-planner-ynxs.vercel.app/api/routes/auth/profile', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
