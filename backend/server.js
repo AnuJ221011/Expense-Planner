@@ -18,7 +18,7 @@ initDB()
 const app = express();
 
 const allowedOrigins = [
-  'http://localhost:5173',               // local Vite dev
+  'http://localhost:5174',               // local Vite dev
   'https://expense-planner-ten.vercel.app/' //Vercel
 ];
 
@@ -44,6 +44,13 @@ app.use('/api/savings', savingsRoutes);
 app.use('/api', recentTransactionRoutes);
 app.use('/api', analyticsRoutes);
 
+
+app.get('/', (req, res) => {
+    res.send({
+        activeStatus: true,
+        error: false,
+    })
+})
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
