@@ -12,7 +12,7 @@ const ProfileContent = ({ onGoToDashboard }) => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('https://expense-planner-q3rf.vercel.app/api/auth/profile', {
+        const res = await axios.get('http://localhost:3000/api/auth/profile', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

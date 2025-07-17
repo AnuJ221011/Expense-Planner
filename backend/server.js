@@ -19,7 +19,8 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:5174',
-  'https://expense-planner-ten.vercel.app'
+  'https://expense-planner-ten.vercel.app',
+  'https://expense-planner-q3rf.vercel.app'
 ];
 
 const corsOptions = {
@@ -50,6 +51,7 @@ app.get('/', (req, res) => {
     res.send({
         activeStatus: true,
         error: false,
+        message: "Server is running"
     })
 })
 

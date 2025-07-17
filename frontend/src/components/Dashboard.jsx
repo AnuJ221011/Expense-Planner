@@ -51,7 +51,7 @@ const Dashboard = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`https://expense-planner-q3rf.vercel.app/api/transactions/${userId}`, {
+      const response = await fetch(`http://localhost:3000/api/transactions/${userId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

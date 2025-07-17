@@ -12,6 +12,7 @@ const authenticateToken = require('../middleware/authMiddleware');
 
 
 router.post('/signup', async (req, res) => {
+  console.log('Signup endpoint hit by Anuj');
   const { name, email, password } = req.body;
 
   try {
@@ -27,7 +28,7 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({ error: 'Email already exists' });
     }
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server Error'});
   }
 });
 
