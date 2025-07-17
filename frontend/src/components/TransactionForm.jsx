@@ -51,7 +51,7 @@ const TransactionForm = ({ type = 'income', onClose = () => {}, onSubmit = () =>
         : { ...formData, type, user_id: userId };
 
     try {
-      const endpoint = type === 'income' ? 'https://expense-planner-ynxs.vercel.app/api/income' : 'https://expense-planner-ynxs.vercel.app/api/expense';
+      const endpoint = type === 'income' ? 'https://expense-planner-q3rf.vercel.app/api/income' : 'https://expense-planner-q3rf.vercel.app/api/expense';
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

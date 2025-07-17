@@ -18,7 +18,7 @@ const SignUpModal = ({
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('https://expense-planner-ynxs.vercel.app/api/routes/auth/signup', {
+      const res = await fetch('https://expense-planner-q3rf.vercel.app/api/routes/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),

@@ -40,7 +40,7 @@ const BalanceCard = ({ userId, showBalance, onToggleBalance }) => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`https://expense-planner-ynxs.vercel.app/api/balance/${userId}`, {
+      const response = await fetch(`https://expense-planner-q3rf.vercel.app/api/balance/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

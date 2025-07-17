@@ -33,7 +33,7 @@ router.post('/signup', async (req, res) => {
 
 router.post('/signin', async (req, res) => {
   const { email, password } = req.body;
-//   console.log('Signin attempt bu Anuj:', { email });
+  console.log('Signin attempt bu Anuj:', { email });
 
   try {
     const result = await pool.query('SELECT * FROM "User" WHERE email = $1', [email]);

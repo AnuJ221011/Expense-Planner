@@ -58,7 +58,7 @@ const api = {
 
   // Income API calls
   getIncomeByCategory: async (userId, period) => {
-    const response = await fetch(`https://expense-planner-ynxs.vercel.app/api/income/category/${period}/${userId}`, {
+    const response = await fetch(`https://expense-planner-q3rf.vercel.app/api/income/category/${period}/${userId}`, {
       headers: api.getAuthHeaders()
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -66,7 +66,7 @@ const api = {
   },
   
   getIncomeByDateThisMonth: async (userId) => {
-    const response = await fetch(`https://expense-planner-ynxs.vercel.app/api/income/monthly-dates/${userId}`, {
+    const response = await fetch(`https://expense-planner-q3rf.vercel.app/api/income/monthly-dates/${userId}`, {
       headers: api.getAuthHeaders()
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -75,7 +75,7 @@ const api = {
   
   // Expense API calls
   getExpensesByCategory: async (userId, period) => {
-    const response = await fetch(`https://expense-planner-ynxs.vercel.app//api/expenses/category/${period}/${userId}`, {
+    const response = await fetch(`https://expense-planner-q3rf.vercel.app//api/expenses/category/${period}/${userId}`, {
       headers: api.getAuthHeaders()
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -83,7 +83,7 @@ const api = {
   },
   
   getExpensesByDateThisMonth: async (userId) => {
-    const response = await fetch(`https://expense-planner-ynxs.vercel.app/api/expenses/monthly-dates/${userId}`, {
+    const response = await fetch(`https://expense-planner-q3rf.vercel.app/api/expenses/monthly-dates/${userId}`, {
       headers: api.getAuthHeaders()
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
