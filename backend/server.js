@@ -18,23 +18,24 @@ initDB()
 const app = express();
 
 const allowedOrigins = [
-  'http://localhost:5174',               // local Vite dev
-  'https://expense-planner-ten.vercel.app/' //Vercel
+  'http://localhost:5174',
+  'https://expense-planner-ten.vercel.app'
 ];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl, postman)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true 
+   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
 };
 
 app.use(cors(corsOptions));
+
 
 app.use(express.json());
 app.use('/api/routes/auth', authRoutes);
